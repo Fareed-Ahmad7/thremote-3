@@ -45,14 +45,6 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
   final TextEditingController _controller = TextEditingController();
   bool _isKeyboardVisible = false;
 
-  Future<void> _sendCharacter(String value) async {
-    if (value.isNotEmpty) {
-      final char = value.substring(value.length - 1);
-      debugPrint('Send to STB: $char');
-      await sendSTBText(char);
-    }
-  }
-
   Widget _buildButton(int number, double size) {
     Timer? repeatTimer;
 
@@ -343,7 +335,11 @@ class _RemoteControlScreenState extends State<RemoteControlScreen> {
                       focusNode: _focusNode,
                       autofocus: false,
                       onChanged: (value) async {
-                        await _sendCharacter(value);
+                        if (value.isNotEmpty) {
+                          final char = value.substring(value.length - 1);
+                          debugPrint('Send to STB: $char');
+                          await sendSTBText(char);
+                        }
                         _controller.clear();
                       },
                     ),
