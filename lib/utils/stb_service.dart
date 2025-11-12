@@ -351,23 +351,23 @@ class STBRemoteService {
       await connect(ipAddress);
 
       // Send connect
-      _socket!.add(getReqConnectMsg());
-      await _socket!.flush();
-      final response1 = await _streamQueue!.next;
-      printReply(code, Uint8List.fromList(response1));
+      // _socket!.add(getReqConnectMsg());
+      // await _socket!.flush();
+      // final response1 = await _streamQueue!.next;
+      // printReply(code, Uint8List.fromList(response1));
 
       // Send ping
-      _socket!.add(getPingMsg(code));
-      await _socket!.flush();
-      final response2 = await _streamQueue!.next;
-      printReply(code, Uint8List.fromList(response2));
+      // _socket!.add(getPingMsg(code));
+      // await _socket!.flush();
+      // final response2 = await _streamQueue!.next;
+      // printReply(code, Uint8List.fromList(response2));
 
       // Send RC + ping
       _socket!.add(getRcCodeMsg(code, rcCode));
-      _socket!.add(getPingMsg(code));
+      // _socket!.add(getPingMsg(code));
       await _socket!.flush();
-      final response3 = await _streamQueue!.next;
-      printReply(code, Uint8List.fromList(response3));
+      // final response3 = await _streamQueue!.next;
+      // printReply(code, Uint8List.fromList(response3));
     } catch (e) {
       print("sendKey error: $e");
       disconnect(); // Optional: force reconnect on next send
@@ -388,10 +388,10 @@ class STBRemoteService {
       await connect(ipAddress);
 
       // Send initial connect
-      _socket!.add(getReqConnectMsg());
-      await _socket!.flush();
-      final response1 = await _streamQueue!.next;
-      printReply(code, Uint8List.fromList(response1));
+      // _socket!.add(getReqConnectMsg());
+      // await _socket!.flush();
+      // final response1 = await _streamQueue!.next;
+      // printReply(code, Uint8List.fromList(response1));
 
       int keyCode = text.runes.first;
       _socket!.add(getCharMsg(code, keyCode, 0));
