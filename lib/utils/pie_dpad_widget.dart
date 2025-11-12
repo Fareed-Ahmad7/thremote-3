@@ -14,6 +14,25 @@ class PieDPad extends StatefulWidget {
 
 class _PieDPadState extends State<PieDPad> {
   Timer? repeatTimer;
+  bool _isRepeating = false;
+
+  void _startRepeat(int code) {
+    if (_isRepeating) return;
+    _isRepeating = true;
+    
+    repeatTimer = Timer.periodic(
+      const Duration(milliseconds: 300),
+      (_) => widget.onClick(code),
+    );
+  }
+
+  Future<void> _stopRepeat() async {
+    repeatTimer?.cancel();
+    repeatTimer = null;
+    await Future.delayed(const Duration(milliseconds: 100));
+    _isRepeating = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -55,22 +74,12 @@ class _PieDPadState extends State<PieDPad> {
 
           // Center OK button
           GestureDetector(
-            onTapDown: (_) {
-              repeatTimer = Timer.periodic(
-                const Duration(milliseconds: 300),
-                (_) => widget.onClick(172),
-              );
-            },
-            onTapUp: (_) {
-              repeatTimer?.cancel();
-              repeatTimer = null;
-            },
-            onTapCancel: () {
-              repeatTimer?.cancel();
-              repeatTimer = null;
-            },
+            onTapDown: (_) => _startRepeat(172),
+            onTapUp: (_) => _stopRepeat(),
+            onTapCancel: () => _stopRepeat(),
             child: ElevatedButton(
               onPressed: () async {
+                if (_isRepeating) return;
                 await widget.onClick(172);
               },
               style: ElevatedButton.styleFrom(
@@ -110,20 +119,9 @@ class _PieDPadState extends State<PieDPad> {
         width: size,
         height: size,
         child: GestureDetector(
-          onTapDown: (_) {
-            repeatTimer = Timer.periodic(
-              const Duration(milliseconds: 300),
-              (_) => widget.onClick(code),
-            );
-          },
-          onTapUp: (_) {
-            repeatTimer?.cancel();
-            repeatTimer = null;
-          },
-          onTapCancel: () {
-            repeatTimer?.cancel();
-            repeatTimer = null;
-          },
+          onTapDown: (_) => _startRepeat(code),
+          onTapUp: (_) => _stopRepeat(),
+          onTapCancel: () => _stopRepeat(),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
@@ -135,6 +133,7 @@ class _PieDPadState extends State<PieDPad> {
               ),
             ),
             onPressed: () async {
+              if (_isRepeating) return;
               await widget.onClick(code);
             },
             child: Icon(
